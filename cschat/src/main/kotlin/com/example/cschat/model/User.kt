@@ -11,5 +11,5 @@ data class User(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
     val name: String = "",
-    val role: Role? = null
+    var role: Role? = null
 )

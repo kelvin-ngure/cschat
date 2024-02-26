@@ -3,7 +3,9 @@ package com.example.cschat.service
 import com.example.cschat.model.Message
 import com.example.cschat.repository.MessageRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
 
+@Service
 class MessageService {
     @Autowired
     lateinit var messageRepository: MessageRepository

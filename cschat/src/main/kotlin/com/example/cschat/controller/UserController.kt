@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/user/customer")
+@RequestMapping("/user/")
 class UserController {
     @Autowired lateinit var userService: UserService
 

@@ -1,5 +1,6 @@
 package com.example.cschat.controller
 
+import com.example.cschat.model.Role
 import com.example.cschat.model.User
 import com.example.cschat.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,6 +15,7 @@ class AgentController {
 
     @PostMapping
     fun addAgent(@RequestBody user: User): String {
+        user.role = Role.AGENT
         return userService.addUser(user)
     }
 

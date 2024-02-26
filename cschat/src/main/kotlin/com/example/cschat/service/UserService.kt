@@ -5,7 +5,9 @@ import com.example.cschat.model.Role
 import com.example.cschat.model.User
 import com.google.gson.Gson
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
 
+@Service
 class UserService {
 
     @Autowired

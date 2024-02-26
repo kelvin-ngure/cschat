@@ -10,7 +10,7 @@ import java.sql.Timestamp
 data class Message(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0,
+    val id: Long? = null,
     val author: Long = 0,
     val recipient: Long = 0,
     val conversationId: Long = 0,

@@ -112,7 +112,7 @@ const Conversation = () => {
     const fetchMessages = async (conversationId: number) => {
         try {
             console.log("fetching messos")
-            const response = await api.get(`/conversation/${conversationId}`);
+            const response = await api.get(`/conversation/${conversationId}/messages`);
             const data = await response.data;
             setMessages(data)
         } catch (error) {

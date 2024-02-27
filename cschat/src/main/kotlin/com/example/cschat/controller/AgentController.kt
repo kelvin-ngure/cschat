@@ -15,8 +15,10 @@ class AgentController {
 
     @PostMapping
     fun addAgent(@RequestBody user: User): String {
-        user.role = Role.AGENT
-        return userService.addUser(user)
+        val modified = user.copy(
+            role = Role.AGENT
+        )
+        return userService.addUser(modified)
     }
 
     @GetMapping

@@ -18,5 +18,5 @@ data class Message(
     val text: String = "",
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     val timeStamp: Timestamp = Timestamp(System.currentTimeMillis()),
-    val priority: Priority = Priority.LOW
+    val priority: Priority = Priority.NORMAL
 )

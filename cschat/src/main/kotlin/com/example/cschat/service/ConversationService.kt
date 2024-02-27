@@ -3,6 +3,7 @@ package com.example.cschat.service
 import com.example.cschat.model.Conversation
 import com.example.cschat.repository.ConversationRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
 @Service
@@ -14,8 +15,16 @@ class ConversationService {
         return conversationRepository.save(newConversation)
     }
 
+    fun editConversation(conversation: Conversation) {
+        conversationRepository.save(conversation)
+    }
+
     fun getAllConversations(): List<Conversation> {
         return conversationRepository.findAll()
+    }
+
+    fun getConversationById(id: Long): Conversation? {
+        return conversationRepository.findByIdOrNull(id)
     }
 
     fun getConversationByCustomerId(customerId: Long): Conversation? {
@@ -24,5 +33,14 @@ class ConversationService {
             return null
         }
         return conversation.first()
+    }
+
+    fun assignConversationToAgent(conversationId: Long, agentId: Long): Conversation? {
+        val conversation = conversationRepository.findByIdOrNull(conversationId)
+        if(conversation != null) {
+            val assignedConversation = conversation.copy(assignedTo = conversationId)
+            conversationRepository.save(assignedConversation)
+        }
+        return null
     }
 }

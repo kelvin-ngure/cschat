@@ -5,7 +5,10 @@ import com.example.cschat.model.Message
 import com.example.cschat.model.User
 import com.example.cschat.service.ConversationService
 import com.example.cschat.service.MessageService
+import org.apache.coyote.Response
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @CrossOrigin("*")
@@ -27,12 +30,17 @@ class ConversationController {
         return conversationService.getAllConversations()
     }
 
+    @GetMapping("/{conversationId}")
+    fun getConversationById(@PathVariable conversationId: Long) : Conversation? {
+        return conversationService.getConversationById(conversationId)
+    }
+
     @GetMapping("/customer/{customerId}")
     fun getConversationByCustomerId(@PathVariable customerId: Long): Conversation? {
         return conversationService.getConversationByCustomerId(customerId)
     }
 
-    @GetMapping("/{conversationId}")
+    @GetMapping("/{conversationId}/messages")
     fun getAllMessagesInConversation(@PathVariable conversationId: Long): List<Message> {
         return messageService.getAllMessages().filter { it.conversationId == conversationId }
     }
@@ -42,5 +50,16 @@ class ConversationController {
         val conversations = messageService.getMessagesByConversationId(conversationId)
         if(conversations.isNotEmpty()) return listOf(conversations.last())
         return conversations
+    }
+
+    @PostMapping("/assign")
+    fun selfAssignConversation(@RequestBody conversation: Conversation): ResponseEntity<String> {
+        val currentState = conversationService.getConversationById(conversation.id)!!
+        if(currentState.resolved || currentState.assignedTo != null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("The conversation has already been resolved or assigned to another agent")
+        }
+
+        conversationService.editConversation(conversation.copy(assignedTo = conversation.assignedTo))
+        return ResponseEntity.ok().body("Successfully assigned")
     }
 }

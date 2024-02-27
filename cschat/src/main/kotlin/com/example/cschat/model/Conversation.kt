@@ -12,4 +12,5 @@ data class Conversation(
     val owner: Long = 0, // customer is owner
     val resolved: Boolean = false,
     val assignedTo: Long? = null, // agent
+    val priority: Priority = Priority.NORMAL // based on the highest priority of any message in thee conversatiomn
 )

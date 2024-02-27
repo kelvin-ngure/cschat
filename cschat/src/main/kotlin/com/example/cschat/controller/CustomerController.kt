@@ -15,8 +15,10 @@ class CustomerController {
 
     @PostMapping
     fun addCustomer(@RequestBody user: User): String {
-        user.role = Role.CUSTOMER
-        return userService.addUser(user)
+        val modified = user.copy(
+            role = Role.CUSTOMER
+        )
+        return userService.addUser(modified)
     }
 
     @GetMapping

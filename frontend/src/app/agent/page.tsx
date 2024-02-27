@@ -5,19 +5,38 @@ import api from '../../util/api';
 import Conversation from '../../model/Conversation';
 import {Client} from '@stomp/stompjs';
 import Message from '../../model/Message';
+import Constants from '@/util/constants';
 
-const url = "ws://localhost:8080/cschat"
 const topic = "/topic/read_public"
 
 const Agent = () => {
-    const [latestMessages, setLatestMessages] = useState<Message[]>([]);
     const searchParams = useSearchParams()
     const [userId, userName] = searchParams.values()
+    const [latestMessages, setLatestMessages] = useState<Message[]>([]);
+    const [client, setClient] = useState<Client | null>(null);
 
-    const client = new Client({
-        brokerURL: url,
-        reconnectDelay: 5000,
-    });
+    useEffect(() => {
+        const stompClient = new Client({
+            brokerURL: Constants.BASE_WS_URL,
+            reconnectDelay: 5000,
+        });
+        
+        stompClient.onConnect = function (frame) {
+            stompClient.subscribe(topic, function (payload) {
+                const message: Message = JSON.parse(payload.body)
+                updateMessages(message)
+            });
+        };
+    
+        stompClient.activate();
+        setClient(stompClient);
+        
+        return () => {
+            if (stompClient && stompClient.connected) {
+                stompClient.deactivate();
+            }
+        };
+    }, [topic]);
 
     useEffect(() => {
         fetchLatestMessages()
@@ -25,25 +44,23 @@ const Agent = () => {
 
     const fetchLatestMessages = async () => {
         console.log("fetching messages...")
-        const response = await api.get("/conversation");
+        const response = await api.get(Constants.CONVERSATION_ENDPOINT);
         const conversations: Conversation[] = response.data;
 
         const messagePromises = conversations.map(async (conversation) => {
-            const message_response = await api.get(`/conversation/latest/${conversation.id}`);
+            const message_response = await api.get(`${Constants.CONVERSATION_ENDPOINT}/latest/${conversation.id}`);
             const message: Message = await message_response.data[0];
             return message;
         });
-
         const messages = await Promise.all(messagePromises);
-        console.log(messages)
-        setLatestMessages(messages)
+        setLatestMessages(prev => [...latestMessages, ...messages])
     }
 
 
     const updateMessages = (message: Message) => {
         const duplicate = latestMessages.find(val => val.conversationId === message.conversationId)
-        console.log(duplicate)
         if (duplicate !== undefined) { // if a message of that conversationId exists, remove it. we just want to show latest
+            console.log("removing duplicate")
             const duplicate_removed = latestMessages.filter(val => val.conversationId !== message.conversationId)
             const updated = [message, ...duplicate_removed]
             setLatestMessages(updated)
@@ -52,19 +69,6 @@ const Agent = () => {
             setLatestMessages(update)
         }
     }
-
-    client.onConnect = function (frame) {
-        client.subscribe(topic, function (payload) {
-            const message: Message = JSON.parse(payload.body)
-            updateMessages(message)
-        });
-    };
-
-    client.activate();
-
-
-
-
 
     return (
         <div className="bg-blue-100 text-blue-101 h-screen flex flex-col items-center">

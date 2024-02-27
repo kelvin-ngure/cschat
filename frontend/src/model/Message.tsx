@@ -1,11 +1,11 @@
 interface Message {
     id?: Number,
     author?: Number, 
-    recepient?: Number,
+    recipient?: Number,
     conversationId: Number,
     text: String, 
     timeStamp: String,
-    priority: String
+    priority?: String
 }
 
 export default Message;

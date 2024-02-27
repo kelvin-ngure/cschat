@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import api from '../util/api';
 import User from '../model/User';
+import Constants from '@/util/constants';
 
 
 export default function Page() {
@@ -13,7 +14,7 @@ export default function Page() {
 
         const fetchCustomers = async () => {
                 try {
-                        const response = await api.get("/customer");
+                        const response = await api.get(Constants.CUSTOMER_ENDPOINT);
                         const data = await response;
                         console.log(data.data)
                         setCustomers(data.data);
@@ -24,7 +25,7 @@ export default function Page() {
 
         const fetchAgents = async () => {
                 try {
-                        const response = await api.get("/agent");
+                        const response = await api.get(Constants.AGENT_ENDPOINT);
                         const data = await response;
                         console.log(data.data)
                         setAgents(data.data);
@@ -35,14 +36,14 @@ export default function Page() {
 
         const createAgent = async () => {
                 const agent: User = { name: agentInput }
-                const response = await api.post("/agent", agent)
+                const response = await api.post(Constants.AGENT_ENDPOINT, agent)
                 const newAgent: User = response.data;
                 setAgentInput("")
                 setAgents(prevAgents => [...prevAgents, newAgent]);
         }
         const createCustomer = async () => {
                 const customer: User = { name: customerInput }
-                const response = await api.post("/customer", customer);
+                const response = await api.post(Constants.CUSTOMER_ENDPOINT, customer);
                 const newCustomer: User = response.data;
                 setCustomerInput("")
                 setCustomers(prevCustomers => [...prevCustomers, newCustomer]);
@@ -60,7 +61,7 @@ export default function Page() {
                                 <p>
                                         For ease of use and testing, create a customer and an agent. Then click on the customer's name on the list of customers to login as them.<br />
                                         Then open a new tab to this base url. Click on an agent's name to login as them.<br />
-                                        You can also open a different tab as a different customer to verify that a customer can only see their message thread but an agent can see all message threads.<br />
+                                        You can also open a different tab as a different customer to verify that a customer can only see their conversation but an agent can see all conversations.<br />
                                 </p>
                         </div>
 
@@ -74,8 +75,8 @@ export default function Page() {
                                                 <h3 className="mt-12">Customer List</h3>
                                                 <ul>
                                                         {customers.map((value, index) => (
-                                                                // [userId, receiverId,threadId,userName,userType] 
-                                                                <li key={index}><a href={`/conversation?userId=${value.id}&receiverId=0&threadId=""&userName=${value.name}&userType=customer`}>{value.name}</a></li>
+                                                                // [userId, receiverId,conversationId,userName,userType] 
+                                                                <li key={index}><a href={`/conversation?userId=${value.id}&receiverId=0&conversationId=""&userName=${value.name}&userType=customer`}>{value.name}</a></li>
                                                         ))}
                                                 </ul>
 
@@ -92,7 +93,7 @@ export default function Page() {
                                         <h3 className="mt-12">Agent List</h3>
                                         <ul>
                                                 {agents.map((value, index) => (
-                                                        <li key={index}><a href={`/agent?id=${value.id}&name=${value.name}`}>{value.name}</a></li>
+                                                        <li key={index}><a href={`/agent?userId=${value.id}&userName=${value.name}`}>{value.name}</a></li>
                                                 ))}
                                         </ul>
                                         </div>

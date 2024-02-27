@@ -23,4 +23,9 @@ class CustomerController {
     fun getAllCustomers(): List<User> {
         return userService.getAllCustomers()
     }
+
+    @GetMapping("/{userId}")
+    fun getCustomerById(@PathVariable userId: Long): User? {
+        return userService.getUserById(userId)
+    }
 }

@@ -11,12 +11,7 @@ class ConversationService {
     lateinit var conversationRepository: ConversationRepository
     fun createConversation(customerId: Long): Conversation {
         val newConversation = Conversation(owner = customerId)
-        saveConversation(newConversation)
-        return getConversationByCustomerId(customerId)!!
-    }
-
-    fun saveConversation(conversation: Conversation) {
-        conversationRepository.save(conversation)
+        return conversationRepository.save(newConversation)
     }
 
     fun getAllConversations(): List<Conversation> {

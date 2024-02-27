@@ -14,8 +14,7 @@ class UserService {
     lateinit var userRepository: UserRepository
 
     fun addUser(user: User): String {
-        userRepository.save(user)
-        return Gson().toJson(user)
+        return Gson().toJson(userRepository.save(user))
     }
 
     fun getAllUsers(): List<User> {

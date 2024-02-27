@@ -1,5 +1,6 @@
 package com.example.cschat.model
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
@@ -15,6 +16,7 @@ data class Message(
     val recipient: Long = 0,
     val conversationId: Long = 0,
     val text: String = "",
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     val timeStamp: Timestamp = Timestamp(System.currentTimeMillis()),
-    val priority: Priority
+    val priority: Priority = Priority.LOW
 )

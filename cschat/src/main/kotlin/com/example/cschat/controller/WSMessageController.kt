@@ -32,14 +32,17 @@ class WSMessageController {
             return savedMessage
         }
 
+        println("bouncing message back to agent ${message}")
         return message // if message is returned as is, it means it is being bounced back to the agent from the messageCustomer() function below
     }
 
     // when agent messages user, the processed and saved message is sent back to them via messageAgents(). the conversation id organizes it automatically on the UI
     @MessageMapping("/send_to_customer") // used by agent
     fun messageCustomer(@Payload message: Message): Message {
+        println("received message for customer ${message}")
         val savedMessage = messageService.saveMessage(message)
-        messageAgents(savedMessage)
+        simpMessagingTemplate.convertAndSend("/topic/read_public", savedMessage)
+        println("send to user")
         simpMessagingTemplate.convertAndSendToUser(savedMessage.recipient.toString(), "/private", savedMessage)
         return savedMessage
     }

@@ -18,7 +18,6 @@ class MessageService {
     }
 
     fun saveMessage(message: Message): Message {
-        messageRepository.save(message)
-        return message
+        return messageRepository.save(message)
     }
 }

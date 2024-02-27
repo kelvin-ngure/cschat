@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/customer")
+@RequestMapping("/user/customer")
 class CustomerController {
     @Autowired
     lateinit var userService: UserService

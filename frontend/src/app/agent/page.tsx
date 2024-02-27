@@ -53,6 +53,11 @@ const Agent = () => {
             return message;
         });
         const messages = await Promise.all(messagePromises);
+        messages.sort((a, b) => {
+            const timeStampA = new Date(a.timeStamp) as Date;
+            const timeStampB = new Date(b.timeStamp) as Date;
+            return timeStampB.getTime() - timeStampA.getTime();
+        });
         setLatestMessages(prev => [...latestMessages, ...messages])
     }
 

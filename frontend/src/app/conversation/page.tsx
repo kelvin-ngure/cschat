@@ -31,7 +31,6 @@ const Conversation = () => {
         });
         
         stompClient.onConnect = function (frame) {
-            console.log(`listening to ${topic}`)
             stompClient.subscribe(topic, function (payload) {
                 const message = JSON.parse(payload.body);
                 setMessages(prev => [...prev, message]);

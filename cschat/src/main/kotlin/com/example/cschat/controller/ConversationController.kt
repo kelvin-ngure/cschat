@@ -19,7 +19,7 @@ class ConversationController {
 
     @PostMapping
     fun createConversation(@RequestBody user: User): Conversation {
-        return conversationService.createConversation(user.id)
+        return conversationService.createConversation(user.id!!)
     }
 
     @GetMapping

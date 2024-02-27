@@ -68,34 +68,36 @@ export default function Page() {
                         <div className='flex items-center justify-center w-full h-full'>
                                 <div className="flex-1 flex-col justify-center">
                                         <div className="flex flex-col items-center justify-center">
-                                                <h3>Create customer</h3>
-                                                <input className="rounded-lg border border-gray-300 p-2" type="text" id="customer" name="customer" placeholder="customer name"  value={customerInput} onChange={(e) => setCustomerInput(e.target.value)} />
-                                                <button className="bg-blue-200 text-blue-500 py-2 px-4 rounded-lg font-semibold mt-12" onClick={() => createCustomer()}>Add customer</button>
+                                                <h3 className="text-lg font-semibold">Create customer</h3>
+                                                <input className="rounded-lg border border-gray-300 p-2" type="text" id="customer" name="customer" placeholder="Customer name" value={customerInput} onChange={(e) => setCustomerInput(e.target.value)} />
+                                                <button className="bg-blue-200 text-blue-500 py-2 px-4 rounded-lg font-semibold mt-4" onClick={() => createCustomer()}>Add customer</button>
 
-                                                <h3 className="mt-12">Customer List</h3>
-                                                <ul>
+                                                <h3 className="mt-8 text-lg font-semibold">Customer List</h3>
+                                                <ul className="max-h-40 overflow-y-auto">
                                                         {customers.map((value, index) => (
-                                                                // [userId, receiverId,conversationId,userName,userType] 
-                                                                <li key={index}><a href={`/conversation?userId=${value.id}&receiverId=0&conversationId=""&userName=${value.name}&userType=customer`}>{value.name}</a></li>
+                                                                <li key={index} className="py-1">
+                                                                        <a href={`/conversation?userId=${value.id}&receiverId=0&conversationId=""&userName=${value.name}&userType=customer`} className="text-blue-500 hover:underline">{value.name}</a>
+                                                                </li>
                                                         ))}
                                                 </ul>
-
                                         </div>
-
                                 </div>
 
-                                <div className="flex-1 flex-col justify-center">
-                                <div className="flex flex-col items-center justify-center">
-                                        <h3>Create agent</h3>
-                                        <input className="rounded-lg border border-gray-300 p-2" type="text" id="agent" name="agent" placeholder="agent name" value={agentInput} onChange={(e) => setAgentInput(e.target.value)} />
-                                        <button className="bg-blue-200 text-blue-500 py-2 px-4 rounded-lg font-semibold mt-12" onClick={() => createAgent()}>Add agent</button>
+                                
 
-                                        <h3 className="mt-12">Agent List</h3>
-                                        <ul>
-                                                {agents.map((value, index) => (
-                                                        <li key={index}><a href={`/agent?userId=${value.id}&userName=${value.name}`}>{value.name}</a></li>
-                                                ))}
-                                        </ul>
+
+                                <div className="flex-1 flex-col justify-center">
+                                        <div className="flex flex-col items-center justify-center">
+                                                <h3>Create agent</h3>
+                                                <input className="rounded-lg border border-gray-300 p-2" type="text" id="agent" name="agent" placeholder="agent name" value={agentInput} onChange={(e) => setAgentInput(e.target.value)} />
+                                                <button className="bg-blue-200 text-blue-500 py-2 px-4 rounded-lg font-semibold mt-12" onClick={() => createAgent()}>Add agent</button>
+
+                                                <h3 className="mt-12">Agent List</h3>
+                                                <ul>
+                                                        {agents.map((value, index) => (
+                                                                <li key={index}><a href={`/agent?userId=${value.id}&userName=${value.name}`}>{value.name}</a></li>
+                                                        ))}
+                                                </ul>
                                         </div>
                                 </div>
 

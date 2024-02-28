@@ -12,7 +12,7 @@ import StockMessage from '@/model/StockMessage';
 
 const Conversation = () => {
     const searchParams = useSearchParams()
-    const [userId, receiverId, conversationId, userName, userType] = searchParams.values()
+    const [userId, receiverId, conversationId, assignedTo, userName, userType] = searchParams.values()
 
 
     // configure topics and receivers based on user type
@@ -146,7 +146,7 @@ const Conversation = () => {
 
             <div className='flex flex-col justify-center px-10'>
 
-                {messageText === "" && (
+                {messageText === "" && (userType === "agent" && userId === assignedTo) && (
                     <div className='flex justify-between px-10'>
                         {stockMessages.map((message, index) => (
                             <button key={message.id} className="message-container bg-blue-101 border-yellow-500 border-1 h-20 flex items-center justify-center w-1/4 px-4 rounded-lg" onClick={() => { setMessageText(message.text) }}>
@@ -157,11 +157,17 @@ const Conversation = () => {
                 )}
 
 
+                {userType === "customer" || (userType === "agent" && (assignedTo == "null" || userId === assignedTo)) ? (
+                    <div className='flex flex-row justify-center px-10'>
+                        <input className="flex-grow p-2 m-3 rounded-lg border border-gray-300" type="text" id="agent" name="agent" placeholder="message" value={messageText} onChange={(e) => setMessageText(e.target.value)} />
+                        <button className="bg-blue-200 text-blue-500 p-2 m-3 rounded-lg font-semibold" onClick={sendMessage}> send message </button>
+                    </div>
+                ) : (
+                    <div className="bg-red-500 p-10 w-full rounded-lg flex justify-center items-center mt-10">
+                        <p className="text-white">You cannot reply to this customer as this conversation has been assigned to another agent.</p>
+                    </div>
+                )}
 
-                <div className='flex flex-row justify-center px-10'>
-                    <input className="flex-grow p-2 m-3 rounded-lg border border-gray-300" type="text" id="agent" name="agent" placeholder="message" value={messageText} onChange={(e) => setMessageText(e.target.value)} />
-                    <button className="bg-blue-200 text-blue-500 p-2 m-3 rounded-lg font-semibold" onClick={sendMessage}> send message </button>
-                </div>
             </div>
         </div>
     );

@@ -76,7 +76,7 @@ export default function Page() {
                                                 <ul className="max-h-40 overflow-y-auto">
                                                         {customers.map((value, index) => (
                                                                 <li key={index} className="py-1">
-                                                                        <a href={`/conversation?userId=${value.id}&receiverId=0&conversationId=""&userName=${value.name}&userType=customer`} className="text-blue-500 hover:underline">{value.name}</a>
+                                                                        <a href={`/conversation?userId=${value.id}&receiverId=0&conversationId=""&assignedTo=""&userName=${value.name}&userType=customer`} className="text-blue-500 hover:underline">{value.name}</a>
                                                                 </li>
                                                         ))}
                                                 </ul>

@@ -1,9 +1,6 @@
 package com.example.cschat.service
 
-import com.example.cschat.model.Conversation
-import com.example.cschat.model.Message
-import com.example.cschat.model.Role
-import com.example.cschat.model.User
+import com.example.cschat.model.*
 import com.example.cschat.repository.ConversationRepository
 import com.example.cschat.repository.MessageRepository
 import com.example.cschat.repository.UserRepository
@@ -27,6 +24,9 @@ class MessageService {
 
     @Autowired
     private lateinit var userRepository: UserRepository
+
+    @Autowired
+    private lateinit var prioritizer: Prioritizer
 
     private fun makeRandomName(): String {
         val charArray = "abcdefghij".toCharArray()
@@ -88,6 +88,18 @@ class MessageService {
     }
 
     fun saveMessage(message: Message): Message {
-        return messageRepository.save(message)
+        val prioritizedMessage = prioritizer.assignPriority(message)
+        val conversation = conversationService.getConversationById(message.conversationId)!!
+        println(message)
+        println(prioritizedMessage)
+        println(conversation)
+
+        if(conversation.priority == Priority.NORMAL && prioritizedMessage.priority == Priority.HIGH) {
+            val modifiedConversation = conversation.copy(priority = Priority.HIGH)
+            println(modifiedConversation)
+            conversationService.editConversation(modifiedConversation)
+        }
+
+        return messageRepository.save(prioritizedMessage)
     }
 }

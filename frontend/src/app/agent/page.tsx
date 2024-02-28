@@ -22,8 +22,6 @@ const Agent = () => {
     }, [userId]);
 
     useEffect(() => {
-        console.log("new message")
-        console.log(newMessage)
         if(newMessage) updateMessages(newMessage)
     }, [newMessage]);
 
@@ -37,7 +35,6 @@ const Agent = () => {
 
         stompClient.onConnect = function (frame) {
             stompClient.subscribe(topic, function (payload) {
-                console.log("the new message")
                 const message: Message = JSON.parse(payload.body)
                 setNewMessage(message)
 
@@ -61,7 +58,6 @@ const Agent = () => {
     }
 
     const fetchLatestMessages = async () => {
-        console.log("called again")
         const response = await api.get(Constants.CONVERSATION_ENDPOINT);
         const conversations: Conversation[] = response.data;
 
@@ -77,20 +73,12 @@ const Agent = () => {
             const timeStampB = new Date(b.message.timeStamp) as Date;
             return timeStampB.getTime() - timeStampA.getTime();
         });
-        console.log(messagesWithConversations)
-        console.log("before")
-        console.log(latestMessages)
         setLatestMessages(prev => [...messagesWithConversations]);
     }
 
 
     const updateMessages = (message: Message) => {
         // check conversation for this message already exists. if it does, replace. its message. if it doesnt, fetch it
-        console.log("message that came in")
-        console.log(message)
-
-        console.log("latest messages")
-        console.log(latestMessages)
         let latest = latestMessages
         const existingPair = latest.findIndex(it => it.conversation.id === message.conversationId)
 
@@ -124,11 +112,16 @@ const Agent = () => {
             </div>
             <div className='flex flex-col w-full px-20 h-20'>
                 {
-                    latestMessages.map(({ conversation, message }, index) => (
-                        <a className='flex flex-col w-full h-full bg-blue-102 px-10 pb-5 pt-5 border-t border-b border-blue-103 border-solid ' key={index} href={`/conversation?userId=${userId}&receiverId=${message.author}&conversationId=${conversation.id}&userName=${userName}&userType=agent`} style={{ textDecoration: 'none' }}>
+                    latestMessages
+                    .sort((a, b) => {
+                        const priorityComparison = (a.conversation.priority === 'HIGH' ? -1 : 1) - (b.conversation.priority === 'HIGH' ? -1 : 1);
+                        return priorityComparison === 0 ? new Date(b.message.timeStamp) - new Date(a.message.timeStamp) : priorityComparison;
+                    })
+                    .map(({ conversation, message }, index) => (
+                        <a className='flex flex-col w-full h-full bg-blue-102 px-10 pb-5 pt-5 border-t border-b border-blue-103 border-solid ' key={index} href={`/conversation?userId=${userId}&receiverId=${message.author}&conversationId=${conversation.id}&assignedTo=${conversation.assignedTo}&userName=${userName}&userType=agent`} style={{ textDecoration: 'none' }}>
                             <div className='grid grid-cols-6 gap-4'>
                                 <p className='col-span-1'>{message.author}</p>
-                                <p className='col-span-3'>{message.text}</p>
+                                <p className={`col-span-3 ${conversation.priority === 'HIGH' ? 'text-red-500' : 'text-black'}`}>{message.text}</p>
                                 <p className='col-span-1'>{message.timeStamp}</p>
                                 {conversation.assignedTo ? (
                                     <p className='col-span-1' style={{ backgroundColor: 'yellow', color: 'black', textAlign: 'center' }}>{conversation.assignedTo}</p>

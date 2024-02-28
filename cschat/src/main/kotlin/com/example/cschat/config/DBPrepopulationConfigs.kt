@@ -11,7 +11,7 @@ class DBPrepopulationConfigs(
     private val stockMessageService: StockMessageService
 ) : CommandLineRunner {
     override fun run(vararg args: String?) {
-       // messageService.importMessagesFromCSV()
+        messageService.importMessagesFromCSV()
         stockMessageService.prepopulateStockMessages()
     }
 }

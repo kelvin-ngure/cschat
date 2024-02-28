@@ -146,7 +146,7 @@ const Conversation = () => {
 
             <div className='flex flex-col justify-center px-10'>
 
-                {messageText === "" && (userType === "agent" && userId === assignedTo) && (
+                {messageText === "" && (userType === "agent" && (assignedTo == "null" || userId === assignedTo)) && (
                     <div className='flex justify-between px-10'>
                         {stockMessages.map((message, index) => (
                             <button key={message.id} className="message-container bg-blue-101 border-yellow-500 border-1 h-20 flex items-center justify-center w-1/4 px-4 rounded-lg" onClick={() => { setMessageText(message.text) }}>

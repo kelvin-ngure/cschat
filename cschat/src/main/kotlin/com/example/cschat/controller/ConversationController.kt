@@ -57,16 +57,12 @@ class ConversationController {
         @RequestBody conversation: Conversation,
         @PathVariable agentId: Long
     ): Conversation {
-        println("SELF ASSIGN REQUESTED")
-        println(conversation)
         val currentState = conversationService.getConversationById(conversation.id)!!
         if(currentState.resolved || currentState.assignedTo != null) {
-            println("return as is")
             return currentState
         }
 
         val assigned = conversationService.editConversation(currentState.copy(assignedTo = agentId))
-        println(assigned)
         return assigned
     }
 }

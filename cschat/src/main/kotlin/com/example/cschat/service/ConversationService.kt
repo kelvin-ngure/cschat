@@ -15,8 +15,8 @@ class ConversationService {
         return conversationRepository.save(newConversation)
     }
 
-    fun editConversation(conversation: Conversation) {
-        conversationRepository.save(conversation)
+    fun editConversation(conversation: Conversation): Conversation {
+        return conversationRepository.save(conversation)
     }
 
     fun getAllConversations(): List<Conversation> {

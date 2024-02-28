@@ -126,9 +126,11 @@ const Conversation = () => {
                 <div>
                     <h2>{userType} account</h2>
                 </div>
-                <div>
-                    <a href={`/customer?userId=${receiverId}&userType=customer`}>View customer profile</a>
-                </div>
+                {userType === "agent" &&
+                    <div>
+                        <a href={`/customer?userId=${receiverId}&userType=customer`}>View customer profile</a>
+                    </div>
+                }
                 <div className='flex justify-end'>
                     <h3>Logged in as {userName}</h3>
                 </div>
@@ -144,13 +146,18 @@ const Conversation = () => {
 
             <div className='flex flex-col justify-center px-10'>
 
-                <div className='flex flex-row justify-center px-10'>
-                    {stockMessages.map((message, index) => (
-                        <div key={message.id}>
-                            <p>{message.text}</p>
-                        </div>
-                    ))}
-                </div>
+                {messageText === "" && (
+                    <div className='flex justify-between px-10'>
+                        {stockMessages.map((message, index) => (
+                            <button key={message.id} className="message-container bg-blue-101 border-yellow-500 border-1 h-20 flex items-center justify-center w-1/4 px-4 rounded-lg" onClick={() => { setMessageText(message.text) }}>
+                                <p className="text-blue-102">{message.text}</p>
+                            </button>
+                        ))}
+                    </div>
+                )}
+
+
+
                 <div className='flex flex-row justify-center px-10'>
                     <input className="flex-grow p-2 m-3 rounded-lg border border-gray-300" type="text" id="agent" name="agent" placeholder="message" value={messageText} onChange={(e) => setMessageText(e.target.value)} />
                     <button className="bg-blue-200 text-blue-500 p-2 m-3 rounded-lg font-semibold" onClick={sendMessage}> send message </button>

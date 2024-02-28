@@ -52,14 +52,21 @@ class ConversationController {
         return conversations
     }
 
-    @PostMapping("/assign")
-    fun selfAssignConversation(@RequestBody conversation: Conversation): ResponseEntity<String> {
+    @PostMapping("/assign/{agentId}")
+    fun selfAssignConversation(
+        @RequestBody conversation: Conversation,
+        @PathVariable agentId: Long
+    ): Conversation {
+        println("SELF ASSIGN REQUESTED")
+        println(conversation)
         val currentState = conversationService.getConversationById(conversation.id)!!
         if(currentState.resolved || currentState.assignedTo != null) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("The conversation has already been resolved or assigned to another agent")
+            println("return as is")
+            return currentState
         }
 
-        conversationService.editConversation(conversation.copy(assignedTo = conversation.assignedTo))
-        return ResponseEntity.ok().body("Successfully assigned")
+        val assigned = conversationService.editConversation(currentState.copy(assignedTo = agentId))
+        println(assigned)
+        return assigned
     }
 }

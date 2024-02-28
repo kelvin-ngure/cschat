@@ -12,6 +12,6 @@ class DBPrepopulationConfigs(
 ) : CommandLineRunner {
     override fun run(vararg args: String?) {
        // messageService.importMessagesFromCSV()
-        // stockMessageService.prepopulateStockMessages()
+        stockMessageService.prepopulateStockMessages()
     }
 }
